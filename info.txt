@@ -1,0 +1,25 @@
+Author: Dr Caterina Bonan
+Collaborator: Dr Lena Baunaz
+
+This constitutes the first step of the establishment of a corpus of spoken French.
+NECESSARY: Obtain additional funds.
+
+Forecasted trajectory:
+
+1- Choose websites to scrape podcasts from (YouTube out)
+
+2- Download files and save them scalably on the clud
+
+3- Utilise speech-to-text API to transcribe videos
+
+4- Start working on data
+
+(Tagging of corpus will be done by assistants when funds are obtained)
+
+Possible choices of website:
+
+- https://frenchyourway.com.au/category/frenchvoices
+
+- https://www.radiofrance.fr/franceinter/podcasts/geopolitique
+
+Possible choices for API: Speechmatics, Microsoft
