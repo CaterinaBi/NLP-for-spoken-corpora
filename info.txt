@@ -16,10 +16,6 @@ Forecasted trajectory:
 
 (Tagging of corpus will be done by assistants when funds are obtained)
 
-Possible choices of website:
-
-- https://frenchyourway.com.au/category/frenchvoices
-
-- https://www.radiofrance.fr/franceinter/podcasts/geopolitique
+Possible choice of website to be determined. At the time being, [radio-en-ligne.fr/podcasts](https://www.radio-en-ligne.fr/podcasts) seems the best option.
 
 Possible choices for API: Speechmatics, Microsoft
