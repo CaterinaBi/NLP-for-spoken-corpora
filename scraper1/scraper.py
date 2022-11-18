@@ -4,6 +4,7 @@ import re
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service as ChromeService
+from tika import parser # pip install tika
 from webdriver_manager.chrome import ChromeDriverManager
 
 import time
@@ -101,7 +102,10 @@ class Scraper:
             link = dictionary['Link']
             
             self.driver.get(link)
-            text = self.driver.find_element(By.CSS_SELECTOR, value='body>embed').text # string
+            #text = self.driver.find_element(By.CSS_SELECTOR, value='body>embed').text # string
+
+            text = parser.from_file(link)
+            print(text)
 
             dictionary['Text'] = text
             print(f'---Text #{i} extracted.\n')
@@ -109,65 +113,14 @@ class Scraper:
 
         # print(self.dictionaries_list)
 
-    def extract_clefts_from_text(self):
-        """A method that extracts only interrogatives from scraped texts"""
-
-        for i, dictionary in enumerate(self.dictionaries_list):
-            # interrogatives = []
-            text = dictionary['Text']
-            sentences = sent_tokenize(text) # list
-
-            for sentence in sentences:
-                if 'c\'est' in sentence:
-                    dictionary['Clefts'] = sentence
-                    self.cleft_dictionaries.append(sentence)
-                elif '?' in sentence:
-                    dictionary['Interrogatives'] = sentence
-                    self.interrogative_dictionaries.append(sentence)
-                else:
-                    continue
-
-            print(f'---All clefts and interrogatives extracted from text #{i}.\n')
-
     def save_data_to_json(self, destination_folder='raw_data/data'):
         '''A method that converts the century lists into .json files and stores them into dedicated directory'''
         if not os.path.exists(destination_folder):
             os.makedirs(destination_folder)
 
-        file_name = 'lecteurs_anonymes_interrogatives.json'
+        file_name = 'lecteurs_anonymes.json'
 
         folder_path = os.path.join(destination_folder, file_name)
         with open(folder_path, 'w', encoding='utf-8') as output:
-            json.dump(self.interrogative_dictionaries, output, ensure_ascii=False, indent=4)
+            json.dump(self.dictionaries_list, output, ensure_ascii=False, indent=4)
             print('---Json file created.')
-
-        file_name = 'lecteurs_anonymes_clefts.json'
-
-        folder_path = os.path.join(destination_folder, file_name)
-        with open(folder_path, 'w', encoding='utf-8') as output:
-            json.dump(self.cleft_dictionaries, output, ensure_ascii=False, indent=4)
-            print('---Json file created.')
-
-    def export_data_to_excel(self):
-
-        file_name = 'lecteurs_anonymes_interrogatives.xlsx'
-
-        for dictionary in self.interrogative_dictionaries:
-            del dictionary['Text']
-
-        df = pd.DataFrame.from_dict(self.interrogative_dictionaries)
-        df.to_excel(file_name)
-
-        print('---Excel file created.\n')
-
-        file_name = 'lecteurs_anonymes_clefts.xlsx'
-
-        for dictionary in self.cleft_dictionaries:
-            del dictionary['Text']
-
-        df = pd.DataFrame.from_dict(self.cleft_dictionaries)
-        df.to_excel(file_name)
-
-        print('---Excel file created.\n')
-
-        print('---Data collection correctly executed.')
