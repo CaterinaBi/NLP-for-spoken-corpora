@@ -106,9 +106,9 @@ class Scraper:
 
             text_dict = parser.from_file(link)
             text = text_dict["content"]
-            print(text)
+            clean_text = text.replace('\n', '')
 
-            dictionary['Text'] = text
+            dictionary['Text'] = clean_text
             print(f'---Text #{i} extracted.\n')
             time.sleep(2)
 
@@ -125,71 +125,3 @@ class Scraper:
         with open(folder_path, 'w', encoding='utf-8') as output:
             json.dump(self.dictionaries_list, output, ensure_ascii=False, indent=4)
             print('---Json file created.')
-
-    def extract_clefts_from_text(self):
-        """A method that extracts only interrogatives from scraped texts"""
-        print('---Extracting all clefts from text now.')
-
-        for i, dictionary in enumerate(self.dictionaries_list):
-            try:
-                texts = dictionary['Text']
-
-                sentences = sent_tokenize(texts) # list
-
-                for index, sentence in enumerate(sentences):
-                    if "c'est" in sentence:
-                        dico = dictionary
-                        try:
-                            dico['Context1'] = sentence[index - 6]
-                        except: 
-                            dico['Context1'] = 'none'
-
-                        try:
-                            dico['Context2'] = sentence[index - 5]
-                        except:
-                            dico['Context2'] = 'none'
-
-                        try:
-                            dico['Context3'] = sentence[index - 4]
-                        except:
-                            dico['Context3'] = 'none'
-
-                        try:
-                            dico['Context4'] = sentence[index - 3]
-                        except:
-                            dico['Context4'] = 'none'
-
-                        try:
-                            dico['Context5'] = sentence[index - 2]
-                        except:
-                            dico['Context5'] = 'none'
-                    
-                        try:
-                            dico['Context6'] = sentence[index - 1]
-                        except:
-                            dico['Context6'] = 'none'
-
-                        dico['Clefts'] = sentence
-                        # text = dictionary['Text']
-
-                        del dico['Text']
-                        self.cleft_dictionaries.append(dico)
-                
-                    else:
-                        continue
-            
-            except:
-                continue
-
-        print(f'---All clefts extracted from text #{i}.\n')
-
-    def export_data_to_excel(self):
-
-        file_name = 'lecteurs_anonymes_all_clefts.xlsx'
-
-        df = pd.DataFrame.from_dict(self.cleft_dictionaries)
-        df.to_excel(file_name)
-
-        print('---Excel file created.\n')
-
-        print('---Data collection correctly executed.')
